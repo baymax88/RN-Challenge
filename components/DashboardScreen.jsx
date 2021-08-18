@@ -65,7 +65,16 @@ const styles = StyleSheet.create({
   barContainer: {
     height: 10,
     width: '100%',
-    backgroundColor: 'navajowhite'
+    backgroundColor: '#FAF3E2',
+    borderRadius: 10,
+    overflow: "hidden",
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  pointsState: {
+    backgroundColor: '#FFC453',
+    borderRadius: 10,
+    height: '100%',
   },
   buddy: {
     borderWidth: 1,
@@ -302,26 +311,37 @@ function Rewards () {
   return (
     <View style={styles.section}>
       <SectionHead heading="Earn Rewards" buttonLabel="All Rewards" buttonAction={() => {}} />
-      <Text>80 Points</Text>
-      <View style={styles.barContainer}>
-        <View style={{ backgroundColor: 'orange', position: 'absolute', width: '20%', height: '100%' }} />
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <View style={styles.filledCircle} />
-        <Text>5 Stars earned</Text>
-        <Text>Open the app once a day</Text>
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <View style={styles.filledCircle} />
-        <Text>15 Stars earned</Text>
-        <Text>3 meds taken</Text>
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <View style={styles.openCircle} />
-        <Text>0 Stars earned</Text>
-        <Text>Daily health survey</Text>
-      </View>
-      <Text>Expand</Text>
+      <Paper style={{ marginTop: 16, padding: 16, position: "relative" }}>
+        <Image source={require("../assets/rocket.png")} style={{ position: "absolute", right: 16 }}/>
+        <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+          <Text style={{ color: "#303030", fontSize: 32, fontWeight: "600" }}>80</Text>
+          <Text style={{ ...styles.heading2, color: "#959DA5", marginBottom: 6 }}> Points</Text>
+        </View>
+
+        <View style={styles.barContainer}>
+          <View style={{ ...styles.pointsState, width: "20%" }} />
+        </View>
+        {/* Should be rendered as a component */}
+        <View style={{ flexDirection: 'row', marginTop: 4 }}>
+          <CheckIcon />
+          <Text style={{ ...styles.medItemTime, marginLeft: 8, color: "#586069" }}>5 Stars earned .</Text>
+          <Text style={{ ...styles.medItemTime, marginLeft: 8, color: "#586069" }}>Open the app once a day</Text>
+        </View>
+        <View style={{ flexDirection: 'row', marginTop: 4 }}>
+          <CheckIcon />
+          <Text style={{ ...styles.medItemTime, marginLeft: 8, color: "#586069" }}>15 Stars earned .</Text>
+          <Text style={{ ...styles.medItemTime, marginLeft: 8, color: "#586069" }}>3 meds taken</Text>
+        </View>
+        <View style={{ flexDirection: 'row', marginTop: 4 }}>
+          <CircleIcon />
+          <Text style={{ ...styles.medItemTime, marginLeft: 8 }}>0 Stars earned .</Text>
+          <Text style={{ ...styles.medItemTime, marginLeft: 8 }}>Daily health survey</Text>
+        </View>
+        <TouchableOpacity onPress={() => {}} style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 16 }}>
+          <Text style={styles.sectionHeadBtn}>Expand</Text>
+          <RightArrowIcon style={{ marginLeft: 8, transform: [{ rotate: "90deg" }] }} />
+        </TouchableOpacity>
+      </Paper>
     </View>
   )
 }
@@ -368,58 +388,60 @@ function RecentHistory () {
   return (
     <View style={styles.section}>
       <SectionHead heading="Past 7 days" buttonLabel="Medication history" buttonAction={() => {}} />
-      <Text>Medication Progress</Text>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View style={styles.historyDay}>
-          <Text>Th</Text>
-          <Text>12</Text>
-          <View style={styles.barContainer}>
-            <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
+      <Paper style={{ marginTop: 16, padding: 16 }}>
+        <Text style={styles.medItemTime}>Medication Progress</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={styles.historyDay}>
+            <Text>Th</Text>
+            <Text>12</Text>
+            <View style={styles.barContainer}>
+              <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
+            </View>
+          </View>
+          <View style={styles.historyDay}>
+            <Text>Fri</Text>
+            <Text>13</Text>
+            <View style={styles.barContainer}>
+              <View style={{ backgroundColor: 'orange', width: '100%', height: '100%' }} />
+            </View>
+          </View>
+          <View style={styles.historyDay}>
+            <Text>Sat</Text>
+            <Text>14</Text>
+            <View style={styles.barContainer}>
+              <View style={{ backgroundColor: 'orange', width: '100%', height: '100%' }} />
+            </View>
+          </View>
+          <View style={styles.historyDay}>
+            <Text>Sun</Text>
+            <Text>15</Text>
+            <View style={styles.barContainer}>
+              <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
+            </View>
+          </View>
+          <View style={styles.historyDay}>
+            <Text>Mon</Text>
+            <Text>16</Text>
+            <View style={styles.barContainer}>
+              <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
+            </View>
+          </View>
+          <View style={styles.historyDay}>
+            <Text>Tues</Text>
+            <Text>17</Text>
+            <View style={styles.barContainer}>
+              <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
+            </View>
+          </View>
+          <View style={styles.historyDay}>
+            <Text>Wed</Text>
+            <Text>18</Text>
+            <View style={styles.barContainer}>
+              <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
+            </View>
           </View>
         </View>
-        <View style={styles.historyDay}>
-          <Text>Fri</Text>
-          <Text>13</Text>
-          <View style={styles.barContainer}>
-            <View style={{ backgroundColor: 'orange', width: '100%', height: '100%' }} />
-          </View>
-        </View>
-        <View style={styles.historyDay}>
-          <Text>Sat</Text>
-          <Text>14</Text>
-          <View style={styles.barContainer}>
-            <View style={{ backgroundColor: 'orange', width: '100%', height: '100%' }} />
-          </View>
-        </View>
-        <View style={styles.historyDay}>
-          <Text>Sun</Text>
-          <Text>15</Text>
-          <View style={styles.barContainer}>
-            <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
-          </View>
-        </View>
-        <View style={styles.historyDay}>
-          <Text>Mon</Text>
-          <Text>16</Text>
-          <View style={styles.barContainer}>
-            <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
-          </View>
-        </View>
-        <View style={styles.historyDay}>
-          <Text>Tues</Text>
-          <Text>17</Text>
-          <View style={styles.barContainer}>
-            <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
-          </View>
-        </View>
-        <View style={styles.historyDay}>
-          <Text>Wed</Text>
-          <Text>18</Text>
-          <View style={styles.barContainer}>
-            <View style={{ backgroundColor: 'orange', width: '50%', height: '100%' }} />
-          </View>
-        </View>
-      </View>
+      </Paper>
     </View>
   )
 }
