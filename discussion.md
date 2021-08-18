@@ -12,6 +12,9 @@ In this challenge, I only concentrated on building the UI like the design as pos
 I assumed the data for the API parts are completed ready to continue for me without any further data works.
 
 ### 3.Were there any questions you would have asked if this was a real-world scenario?
+Give me some more time to complete this UI.
+1 hour is too small to make it.
+And I prefer to build common components, device-responsiveness, and global styles first in React Native UI building
 
 
 ### 4.How did you prioritize your time? If given a few more hours to improve this, what you would work on next and why?
