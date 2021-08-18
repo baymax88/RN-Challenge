@@ -1,13 +1,32 @@
 import React, { useEffect } from 'react';
-import { Button, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  Button,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+
+// svgs
+import RightArrowIcon from "../icons/RightArrow"
+import SunRiseIcon from "../icons/SunRise"
+import CheckIcon from "../icons/Check"
+import CheckIcon2 from "../icons/Check2"
+import CircleIcon from "../icons/Circle"
+import ChevronIcon from "../icons/Chevron"
+import MedIcon from "../icons/Med"
 
 const styles = StyleSheet.create({
   hr: {
-    borderColor: 'lightgray',
+    borderColor: "#E1E4E8",
     borderWidth: 1,
-    width: '80%',
-    marginLeft: '10%'
+    marginLeft: 16,
+    marginRight: 16,
   },
   container: {
     flex: 1,
@@ -50,47 +69,210 @@ const styles = StyleSheet.create({
   },
   buddy: {
     borderWidth: 1,
-    borderColor: 'lightgray',
-    padding: 10
+    borderTopWidth: 0,
+    borderColor: '#E1E4E8',
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   historyDay: {
 
-  }
+  },
+
+  root: {
+    flex: 1,
+  },
+  flexLayout: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  sectionHead: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  heading1: {
+    fontSize: 20,
+    lineHeight: 25,
+    color: "#303030",
+  },
+  sectionHeadBtn: {
+    fontSize: 14,
+    lineHeight: 17,
+    color: "#2F48AD",
+  },
+  Paper: {
+    borderWidth: 1,
+    borderColor: "#E1E4E8",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  medsContent: {
+    borderTopColor: "#FFDFC1",
+    borderTopWidth: 6,
+    borderBottomColor: "#E1E4E8",
+    padding: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  heading2: {
+    color: "#303030",
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  subText: {
+    color: "#959DA5",
+    fontSize: 14,
+    lineHeight: 17,
+  },
+  checkIcon: {
+    marginRight: 4,
+  },
+  medItem: {
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginLeft: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E1E4E8",
+  },
+  takeBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5C7CFA",
+    borderRadius: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  medItemIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 40,
+    height: 40,
+    borderWidth: 3,
+    borderRadius: 40,
+    borderColor: "#E1E4E8",
+  },
+  medItemTime: {
+    fontSize: 12,
+    lineHeight: 15,
+    color: "#959DA5",
+  },
 });
 
-function TakeMeds () {
+// Common components
+const SectionHead = ({ heading, buttonLabel, buttonAction }) => {
+  return (
+    <View style={styles.sectionHead}>
+      <Text style={styles.heading1}>{heading}</Text>
+      <TouchableOpacity onPress={buttonAction} style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text style={styles.sectionHeadBtn}>{buttonLabel}</Text>
+        <RightArrowIcon style={{ marginLeft: 8 }} />
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+const Paper = ({ children, style }) => {
+  return (
+    <View style={{ ...styles.Paper, ...style }}>
+      {children}
+    </View>
+  )
+}
+
+const CompleteState = ({ total, takens }) => {
+  return (
+    <View style={{ flexDirection: "row", marginTop: 4 }}>
+      {[...Array(takens)].map((e, i) => (
+        <CheckIcon style={styles.checkIcon} key={i} />
+      ))}
+      {[...Array(total - takens)].map((e, i) => (
+        <CircleIcon style={styles.checkIcon} key={i} />
+      ))}
+    </View>
+  )
+}
+
+// Sections
+function TakeMeds ({ todayMedications }) {
+  const [showItems, setShowItems] = React.useState(false);
+  const [medItems, setMedItems] = React.useState([]);
+
+  const takeMedication = (id) => {
+    setMedItems(medItems.map(item => {
+      if (item.id !== id) return item
+      else {
+        return { ...item, isTaken: true }
+      }
+    }))
+
+    // todo: SET MEDICATIOIN
+  }
+
+  const renderMedItem = ({ item }) => {
+    const isLast = item.id === medItems[medItems.length - 1].id
+
+    return (
+      <View style={isLast ? { ...styles.medItem, borderBottomWidth: 0 } : styles.medItem} key={item.id}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={styles.medItemIcon}>
+            <MedIcon />
+          </View>
+          <View style={{ marginLeft: 12 }}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.medItemTime}>{item.dueTime}</Text>
+              <SunRiseIcon style={{ marginLeft: 4 }} />
+            </View>
+            <Text style={{ ...styles.heading2, fontWeight: "600" }}>{item.name}</Text>
+            <Text style={styles.heading2}>Take {item.dosage} {item.dosageType}</Text>
+          </View>
+        </View>
+        <TouchableOpacity style={styles.takeBtn} onPress={() => takeMedication(item.id)}>
+          <Text style={{ ...styles.sectionHeadBtn, color: "#FFF" }}>Take</Text>
+          <CheckIcon2 fill="#FFF" style={{ marginLeft: 4 }} />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  useEffect(() => {
+    setMedItems(todayMedications);
+  }, [todayMedications])
+
   return (
     <View style={styles.section}>
-      <Text>Take your meds</Text>
-      <Button title="Full schedule" />
-      <Text>Morning Medication</Text>
-      <Text>6 routine meds</Text>
-      <View style={styles.circleContainer}>
-        <View style={styles.filledCircle}></View>
-        <View style={styles.filledCircle}></View>
-        <View style={styles.filledCircle}></View>
-        <View style={styles.openCircle}></View>
-        <View style={styles.openCircle}></View>
-        <View style={styles.openCircle}></View>
-      </View>
-      <View style={styles.medication}>
-        <Text>6:00 AM</Text>
-        <Text>Vitamin C</Text>
-        <Text>Take 1 tablet</Text>
-        <Button title="Take" />
-      </View>
-      <View style={styles.medication}>
-        <Text>6:00 AM</Text>
-        <Text>Magnesium</Text>
-        <Text>Take 1 tablet</Text>
-        <Button title="Take" />
-      </View>
-      <View style={styles.medication}>
-        <Text>6:00 AM</Text>
-        <Text>Prednisolone</Text>
-        <Text>Take 1 pill</Text>
-        <Button title="Take" />
-      </View>
+      <SectionHead heading="Take your meds" buttonLabel="Full schedule" buttonAction={() => {}} />
+      <Paper style={{ marginTop: 16 }}>
+        <View style={showItems ? { ...styles.medsContent, borderBottomWidth: 1 } : styles.medsContent}>
+          <View style={{ flexDirection: "row" }}>
+            <SunRiseIcon style={{ alignSelf: "flex-start" }} />
+            <View style={{ marginLeft: 10, alignSelf: "flex-start" }}>
+              <Text style={styles.heading2}>Morning Medication</Text>
+              <Text style={{ marginTop: 4, ...styles.subText}}>{medItems?.length} routine meds</Text>
+              <CompleteState
+                total={medItems?.length}
+                takens={medItems?.filter(item => item.isTaken).length} />
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowItems((prev) => !prev)}
+            style={{ borderWidth: 1, width: 42, height: 42, borderRadius: 42, alignSelf: "center", alignItems: "center", justifyContent: "center", backgroundColor: "#FFF", borderColor: "#E1E4E8" }}
+          >
+            <ChevronIcon style={showItems ? {} : { transform: [{ rotate: "180deg" }] }} />
+          </TouchableOpacity>
+        </View>
+        {showItems && (
+          <FlatList
+            data={medItems?.filter(item => !item.isTaken)}
+            renderItem={renderMedItem}
+            keyExtractor={item => item.id}
+          />
+        )}
+      </Paper>
     </View>
   )
 }
@@ -98,9 +280,20 @@ function TakeMeds () {
 function AsNeeded () {
   return (
     <View style={styles.section}>
-      <Text>As-needed medication</Text>
-      <Text>3 of 5 meds okay to take</Text>
-      <Button title="View" />
+      <Paper>
+        <View style={{ padding: 16, ...styles.flexLayout}}>
+          <View>
+            <Text style={styles.heading2}>As-needed medication</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <CheckIcon2 fill="#21B25A" />
+              <Text style={{ ...styles.subText, color: "#1AA260", marginLeft: 4 }}>3 of 5 meds okay to take</Text>
+            </View>
+          </View>
+          <TouchableOpacity>
+            <Text style={styles.sectionHeadBtn}>View</Text>
+          </TouchableOpacity>
+        </View>
+      </Paper>
     </View>
   )
 }
@@ -108,8 +301,7 @@ function AsNeeded () {
 function Rewards () {
   return (
     <View style={styles.section}>
-      <Text>Earn Rewards</Text>
-      <Button title="All Rewards" />
+      <SectionHead heading="Earn Rewards" buttonLabel="All Rewards" buttonAction={() => {}} />
       <Text>80 Points</Text>
       <View style={styles.barContainer}>
         <View style={{ backgroundColor: 'orange', position: 'absolute', width: '20%', height: '100%' }} />
@@ -134,17 +326,6 @@ function Rewards () {
   )
 }
 
-function buddyItem ({item: buddy}) {
-  return (
-    <View key={buddy.id} style={styles.buddy}>
-      <Image source={{uri: buddy.avatarUrl}} style={{ height: 40, width: 40 }} />
-      <Text>{buddy.name}</Text>
-      <Text>All-time adherence</Text>
-      <Text>{String(buddy.adherence).slice(0, 2)}%</Text>
-    </View>
-  )
-}
-
 function Buddies () {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -152,15 +333,33 @@ function Buddies () {
   }, [])
   const buddyList = useSelector(state => state.buddies)
 
+  function buddyItem ({item: buddy}) {
+    const isLast = buddy.id === buddyList.slice(0,3)[2].id
+
+    return (
+      <View key={buddy.id} style={isLast ? { ...styles.buddy, borderBottomWidth: 0 } : styles.buddy}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={{uri: buddy.avatarUrl}} style={{ height: 40, width: 40 }} />
+          <View style={{ marginLeft: 10 }}>
+            <Text style={{ ...styles.subText, color: "#303030" }}>{buddy.name}</Text>
+            <Text style={{ ...styles.medItemTime, color: "#586069" }}>All-time adherence</Text>
+          </View>
+        </View>
+        <Text style={{ ...styles.medItemTime, color: "#1AA260" }}>{String(buddy.adherence).slice(0, 2)}%</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.section}>
-      <Text>Check on buddies</Text>
-      <Button title="All buddies" />
-      <FlatList
-        data={buddyList.slice(0,3)}
-        renderItem={buddyItem}
-        keyExtractor={buddy => String(buddy.id)}
-      />
+      <SectionHead heading="Check on buddies" buttonLabel="All buddies" buttonAction={() => {}} />
+      <Paper style={{ marginTop: 16 }}>
+        <FlatList
+          data={buddyList.slice(0,3)}
+          renderItem={buddyItem}
+          keyExtractor={buddy => String(buddy.id)}
+        />
+      </Paper>
     </View>
   )
 }
@@ -168,8 +367,7 @@ function Buddies () {
 function RecentHistory () {
   return (
     <View style={styles.section}>
-      <Text>Past 7 days</Text>
-      <Button title="Medication history" />
+      <SectionHead heading="Past 7 days" buttonLabel="Medication history" buttonAction={() => {}} />
       <Text>Medication Progress</Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={styles.historyDay}>
@@ -227,18 +425,27 @@ function RecentHistory () {
 }
 
 function DashboardScreen () {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: "FETCH_TODAY_MEDICATIONS" })
+  }, [])
+
+  const todayMedications = useSelector(state => state.todayMedications)
+
   return (
-    <ScrollView>
-      <TakeMeds />
-      <View style={styles.hr} />
-      <AsNeeded />
-      <View style={styles.hr} />
-      <Rewards />
-      <View style={styles.hr} />
-      <Buddies />
-      <View style={styles.hr} />
-      <RecentHistory />
-    </ScrollView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+      <ScrollView style={styles.root}>
+        <TakeMeds todayMedications={todayMedications} />
+        <AsNeeded />
+        <View style={styles.hr} />
+        <Rewards />
+        <View style={styles.hr} />
+        <Buddies />
+        <View style={styles.hr} />
+        <RecentHistory />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
